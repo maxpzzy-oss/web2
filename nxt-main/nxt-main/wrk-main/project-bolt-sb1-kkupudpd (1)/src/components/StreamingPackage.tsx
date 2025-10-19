@@ -47,10 +47,10 @@ export const StreamingPackage: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <div className="mb-6">
-                  <h3 className="text-3xl font-bold text-neutral-900 mb-2">1-Month Package</h3>
+                  <h3 className="text-3xl font-bold text-neutral-900 mb-2">IPTV Package</h3>
                   <div className="flex items-baseline gap-2 mb-4">
-                    <span className="text-5xl font-bold text-primary-600">$29.99</span>
-                    <span className="text-lg text-neutral-600">/month</span>
+                    <span className="text-5xl font-bold text-primary-600">$500</span>
+                    <span className="text-lg text-neutral-600">JMD</span>
                   </div>
                   <div className="inline-block bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
                     Premium Quality Streaming

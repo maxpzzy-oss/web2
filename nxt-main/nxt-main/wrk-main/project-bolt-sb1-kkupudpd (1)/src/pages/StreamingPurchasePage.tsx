@@ -20,8 +20,35 @@ export const StreamingPurchasePage: React.FC = () => {
     name: '',
     email: '',
     paymentMethod: 'crypto',
+    couponCode: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const basePrice = 500;
+
+  const applyCoupon = () => {
+    const code = formData.couponCode.trim().toUpperCase();
+    if (code === 'FRIDAY25') {
+      setCouponApplied(true);
+      setCouponDiscount(25);
+      setCouponError('');
+    } else if (code === '') {
+      setCouponError('Please enter a coupon code');
+      setCouponApplied(false);
+      setCouponDiscount(0);
+    } else {
+      setCouponError('Invalid coupon code');
+      setCouponApplied(false);
+      setCouponDiscount(0);
+    }
+  };
+
+  const calculateTotal = () => {
+    const discountAmount = (basePrice * couponDiscount) / 100;
+    return basePrice - discountAmount;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +109,10 @@ export const StreamingPurchasePage: React.FC = () => {
             <Card className="p-8 mb-6">
               <div className="bg-gradient-to-br from-secondary-600 to-secondary-700 rounded-xl p-6 text-white mb-6">
                 <h2 className="text-3xl font-bold mb-2">Premium IPTV Package</h2>
-                <p className="text-4xl font-bold mb-4">$79<span className="text-xl font-normal">/month</span></p>
+                <p className="text-4xl font-bold mb-4">${calculateTotal()}<span className="text-xl font-normal"> JMD</span></p>
+                {couponApplied && (
+                  <p className="text-lg line-through text-white/70 mb-2">${basePrice} JMD</p>
+                )}
                 <div className="flex items-center gap-2 text-white/90">
                   <Tv className="w-5 h-5" />
                   <span className="text-lg">700+ HD Channels</span>
@@ -206,12 +236,44 @@ export const StreamingPurchasePage: React.FC = () => {
                   </div>
                 </div>
 
+                <div>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">Coupon Code</h3>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <Input
+                        label=""
+                        type="text"
+                        placeholder="Enter coupon code"
+                        value={formData.couponCode}
+                        onChange={(e) => {
+                          setFormData({ ...formData, couponCode: e.target.value });
+                          setCouponError('');
+                        }}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={applyCoupon}
+                      className="mt-0 h-12"
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                  {couponApplied && (
+                    <p className="text-sm text-green-600 mt-2 font-semibold">Coupon applied successfully! You saved ${(basePrice * couponDiscount / 100).toFixed(0)} JMD</p>
+                  )}
+                  {couponError && (
+                    <p className="text-sm text-red-600 mt-2">{couponError}</p>
+                  )}
+                </div>
+
                 <Button
                   type="submit"
                   variant="primary"
                   className="w-full hover:shadow-glow-secondary transition-all duration-300 animate-pulse-glow"
                 >
-                  Start Streaming Now - $79/mo
+                  Start Streaming Now - ${calculateTotal()} JMD
                 </Button>
 
                 <p className="text-xs text-center text-neutral-500">

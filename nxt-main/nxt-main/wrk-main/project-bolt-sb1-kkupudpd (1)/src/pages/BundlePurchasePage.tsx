@@ -35,10 +35,36 @@ export const BundlePurchasePage: React.FC = () => {
     city: '',
     zipCode: '',
     paymentMethod: 'card',
+    couponCode: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
 
   const regularTotal = bundle.internetPrice + bundle.streamingPrice;
+
+  const applyCoupon = () => {
+    const code = formData.couponCode.trim().toUpperCase();
+    if (code === 'FRIDAY25') {
+      setCouponApplied(true);
+      setCouponDiscount(25);
+      setCouponError('');
+    } else if (code === '') {
+      setCouponError('Please enter a coupon code');
+      setCouponApplied(false);
+      setCouponDiscount(0);
+    } else {
+      setCouponError('Invalid coupon code');
+      setCouponApplied(false);
+      setCouponDiscount(0);
+    }
+  };
+
+  const calculateFinalTotal = () => {
+    const discountAmount = (bundle.total * couponDiscount) / 100;
+    return bundle.total - discountAmount;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,13 +196,19 @@ export const BundlePurchasePage: React.FC = () => {
                   <span className="font-semibold">Bundle Savings (10%)</span>
                   <span className="font-semibold">-${bundle.savings}</span>
                 </div>
+                {couponApplied && (
+                  <div className="flex justify-between items-center text-green-600">
+                    <span className="font-semibold">Coupon Discount ({couponDiscount}%)</span>
+                    <span className="font-semibold">-${(bundle.total * couponDiscount / 100).toFixed(0)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center">
                   <span className="text-neutral-600">Installation</span>
                   <span className="font-semibold text-green-600">FREE</span>
                 </div>
                 <div className="flex justify-between items-center pt-3 border-t border-neutral-200">
                   <span className="text-lg font-bold">Total Due Today</span>
-                  <span className="text-2xl font-bold text-primary-600">${bundle.total}</span>
+                  <span className="text-2xl font-bold text-primary-600">${calculateFinalTotal()}</span>
                 </div>
               </div>
 
@@ -283,6 +315,38 @@ export const BundlePurchasePage: React.FC = () => {
                   </div>
                 </div>
 
+                <div>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">Coupon Code</h3>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <Input
+                        label=""
+                        type="text"
+                        placeholder="Enter coupon code"
+                        value={formData.couponCode}
+                        onChange={(e) => {
+                          setFormData({ ...formData, couponCode: e.target.value });
+                          setCouponError('');
+                        }}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={applyCoupon}
+                      className="mt-0 h-12"
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                  {couponApplied && (
+                    <p className="text-sm text-green-600 mt-2 font-semibold">Coupon applied successfully!</p>
+                  )}
+                  {couponError && (
+                    <p className="text-sm text-red-600 mt-2">{couponError}</p>
+                  )}
+                </div>
+
                 <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
                   <p className="text-sm text-primary-900 font-semibold mb-1">Bundle Discount Applied!</p>
                   <p className="text-sm text-primary-700">You're saving 10% compared to purchasing services separately.</p>
@@ -293,7 +357,7 @@ export const BundlePurchasePage: React.FC = () => {
                   variant="primary"
                   className="w-full hover:shadow-glow-primary transition-all duration-300 animate-pulse-glow"
                 >
-                  Complete Bundle Purchase - ${bundle.total}/mo
+                  Complete Bundle Purchase - ${calculateFinalTotal()}/mo
                 </Button>
 
                 <p className="text-xs text-center text-neutral-500">

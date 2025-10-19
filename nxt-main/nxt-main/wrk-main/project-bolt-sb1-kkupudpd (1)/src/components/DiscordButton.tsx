@@ -7,7 +7,7 @@ export const DiscordButton: React.FC = () => {
   return (
     <div className="fixed bottom-6 right-6 z-100">
       <a
-        href="https://discord.gg/your-server"
+        href="https://discord.gg/6FSxx3ME"
         target="_blank"
         rel="noopener noreferrer"
         className="relative group"

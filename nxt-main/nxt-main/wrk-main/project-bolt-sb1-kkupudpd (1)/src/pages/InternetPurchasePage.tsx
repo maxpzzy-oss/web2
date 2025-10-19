@@ -17,7 +17,7 @@ const allPlans: PlanDetails[] = [
   {
     name: '3-Day Plan',
     duration: '3 Days',
-    price: '$9.99',
+    price: '$200',
     speed: '1 Gigabit',
     features: [
       'Unlimited Data',
@@ -30,7 +30,7 @@ const allPlans: PlanDetails[] = [
   {
     name: '7-Day Plan',
     duration: '7 Days',
-    price: '$19.99',
+    price: '$350',
     speed: '1 Gigabit',
     features: [
       'Unlimited Data',
@@ -43,7 +43,7 @@ const allPlans: PlanDetails[] = [
   {
     name: '14-Day Plan',
     duration: '14 Days',
-    price: '$34.99',
+    price: '$670',
     speed: '1 Gigabit',
     features: [
       'Unlimited Data',
@@ -56,7 +56,7 @@ const allPlans: PlanDetails[] = [
   {
     name: '30-Day Plan',
     duration: '30 Days',
-    price: '$59.99',
+    price: '$1,300',
     speed: '1 Gigabit',
     features: [
       'Unlimited Data',
@@ -86,8 +86,37 @@ export const InternetPurchasePage: React.FC = () => {
     name: '',
     email: '',
     paymentMethod: 'crypto',
+    couponCode: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+
+  const applyCoupon = () => {
+    const code = formData.couponCode.trim().toUpperCase();
+    if (code === 'FRIDAY25') {
+      setCouponApplied(true);
+      setCouponDiscount(25);
+      setCouponError('');
+    } else if (code === '') {
+      setCouponError('Please enter a coupon code');
+      setCouponApplied(false);
+      setCouponDiscount(0);
+    } else {
+      setCouponError('Invalid coupon code');
+      setCouponApplied(false);
+      setCouponDiscount(0);
+    }
+  };
+
+  const calculateTotal = () => {
+    if (!selectedPlan) return '$0';
+    const priceNum = parseFloat(selectedPlan.price.replace('$', '').replace(',', ''));
+    const discountAmount = (priceNum * couponDiscount) / 100;
+    const finalPrice = priceNum - discountAmount;
+    return `$${finalPrice.toFixed(0)}`;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -240,13 +269,19 @@ export const InternetPurchasePage: React.FC = () => {
                   <span className="text-neutral-600">Plan Fee</span>
                   <span className="font-semibold">{selectedPlan.price}</span>
                 </div>
+                {couponApplied && (
+                  <div className="flex justify-between items-center mb-2 text-green-600">
+                    <span className="font-semibold">Coupon Discount ({couponDiscount}%)</span>
+                    <span className="font-semibold">-${(parseFloat(selectedPlan.price.replace('$', '').replace(',', '')) * couponDiscount / 100).toFixed(0)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-neutral-600">Setup Fee</span>
                   <span className="font-semibold text-green-600">FREE</span>
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t border-neutral-200">
                   <span className="text-lg font-bold">Total Due Today</span>
-                  <span className="text-2xl font-bold text-primary-600">{selectedPlan.price}</span>
+                  <span className="text-2xl font-bold text-primary-600">{calculateTotal()}</span>
                 </div>
               </div>
 
@@ -324,6 +359,38 @@ export const InternetPurchasePage: React.FC = () => {
                       </div>
                     </label>
                   </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">Coupon Code</h3>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <Input
+                        label=""
+                        type="text"
+                        placeholder="Enter coupon code"
+                        value={formData.couponCode}
+                        onChange={(e) => {
+                          setFormData({ ...formData, couponCode: e.target.value });
+                          setCouponError('');
+                        }}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={applyCoupon}
+                      className="mt-0 h-12"
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                  {couponApplied && (
+                    <p className="text-sm text-green-600 mt-2 font-semibold">Coupon applied successfully!</p>
+                  )}
+                  {couponError && (
+                    <p className="text-sm text-red-600 mt-2">{couponError}</p>
+                  )}
                 </div>
 
                 <Button

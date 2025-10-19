@@ -38,7 +38,7 @@ export const Layout: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors">
               <Wifi className="w-8 h-8" />
-              <span className="text-xl font-bold">ConnectPro</span>
+              <span className="text-xl font-bold">Cable Internet</span>
             </Link>
 
             <nav className="hidden md:flex items-center gap-6">

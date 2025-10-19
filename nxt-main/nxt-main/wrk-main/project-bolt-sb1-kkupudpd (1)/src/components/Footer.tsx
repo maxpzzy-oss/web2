@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
               <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
                 <Wifi className="w-6 h-6" />
               </div>
-              <span className="text-xl font-bold">InternetPro</span>
+              <span className="text-xl font-bold">Cable Internet</span>
             </div>
             <p className="text-neutral-400 text-sm mb-4">
               Premium high-speed internet and IPTV streaming services. Experience the future of connectivity.
@@ -105,7 +105,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-sm text-neutral-400">
                 <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>support@internetpro.com</span>
+                <span>cableinternet@atomicmail.io</span>
               </li>
               <li className="flex items-start gap-2 text-sm text-neutral-400">
                 <Phone className="w-4 h-4 mt-0.5 flex-shrink-0" />
@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
         <div className="border-t border-neutral-800 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-neutral-400">
-              {currentYear} InternetPro. All rights reserved.
+              {currentYear} Cable Internet. All rights reserved.
             </p>
 
             <div className="flex items-center gap-4">
